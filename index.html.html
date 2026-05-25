@@ -1,0 +1,575 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.journal{
+  width:100%;
+  background:#0a0a08;
+  font-family:'Space Mono',monospace;
+  color:#e8e0d0;
+  overflow:hidden;
+  min-height:560px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 16px;
+  background:#0a0a08;
+  border-bottom:1px solid #2a2a20;
+  font-size:9px;
+  letter-spacing:2px;
+  color:#666;
+  flex-wrap:wrap;
+  gap:4px;
+}
+
+.topbar-center{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.dot-nav{
+  width:20px;height:4px;background:#333;border-radius:2px;cursor:pointer;transition:background 0.3s;
+}
+.dot-nav.active{background:#e8e0d0;}
+.dot-nav.yellow{background:#c8d832;}
+
+.nav-btn{
+  background:none;border:none;color:#666;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;cursor:pointer;padding:0 4px;
+}
+.nav-btn:hover{color:#e8e0d0;}
+
+.spread{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:480px;
+}
+
+.left-page{
+  padding:28px 24px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border-right:1px solid #2a2a20;
+  overflow:hidden;
+  min-height:480px;
+}
+
+.chapter-tag{
+  font-size:8px;
+  letter-spacing:3px;
+  color:#666;
+  margin-bottom:4px;
+}
+
+.chapter-num{
+  font-size:8px;
+  letter-spacing:2px;
+  color:#666;
+  text-align:right;
+}
+
+.page-num-corner{
+  position:absolute;
+  top:28px;right:24px;
+  font-size:8px;
+  color:#444;
+  letter-spacing:2px;
+}
+
+.destination-label{
+  font-size:9px;
+  letter-spacing:3px;
+  color:#888;
+  margin-bottom:8px;
+  margin-top:20px;
+}
+
+.destination-name{
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  font-size:56px;
+  line-height:0.9;
+  letter-spacing:-1px;
+  margin-bottom:8px;
+}
+
+.accent-line{
+  height:2px;
+  width:48px;
+  margin-bottom:12px;
+}
+
+.chinese-name{
+  font-family:'Noto Serif SC',serif;
+  font-weight:300;
+  font-size:13px;
+  letter-spacing:3px;
+  margin-bottom:4px;
+}
+
+.subtitle-tag{
+  font-size:9px;
+  letter-spacing:2px;
+  color:#888;
+  font-style:italic;
+}
+
+.meta-list{
+  margin-top:auto;
+  padding-top:20px;
+}
+
+.meta-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:8px;
+  letter-spacing:1px;
+  color:#555;
+  padding:2px 0;
+  border-bottom:1px solid #1a1a14;
+}
+
+.meta-row span:first-child{color:#888;}
+
+.poem{
+  margin-top:12px;
+  font-style:italic;
+  font-size:9px;
+  line-height:1.8;
+  color:#666;
+  border-left:2px solid;
+  padding-left:10px;
+}
+
+.spot-tag{
+  font-size:8px;
+  letter-spacing:2px;
+  color:#555;
+  margin-top:12px;
+}
+
+.right-page{
+  position:relative;
+  overflow:hidden;
+  background:#111;
+}
+
+.photo-area{
+  width:100%;
+  height:100%;
+  min-height:480px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.photo-bg{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  transition:opacity 0.8s ease;
+}
+
+.photo-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.15);
+}
+
+.photo-meta-bottom{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:10px 14px;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:8px;
+  letter-spacing:2px;
+  color:#aaa;
+}
+
+.photo-caption{
+  position:absolute;
+  bottom:40px;left:14px;
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:12px;
+  color:#e8e0d0cc;
+  letter-spacing:1px;
+}
+
+.frame-counter{
+  position:absolute;
+  top:12px;right:14px;
+  font-size:9px;
+  letter-spacing:2px;
+  color:#e8e0d0;
+  background:rgba(0,0,0,0.5);
+  padding:3px 8px;
+}
+
+.exposure-num{
+  position:absolute;
+  bottom:44px;right:14px;
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  font-size:52px;
+  color:rgba(232,224,208,0.12);
+  line-height:1;
+}
+
+.filmstrip-side{
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:18px;
+  background:#0a0a08;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:8px 0;
+  gap:3px;
+  overflow:hidden;
+  border-left:1px solid #1a1a14;
+}
+
+.thumb{
+  width:12px;height:14px;background:#222;border-radius:1px;flex-shrink:0;overflow:hidden;cursor:pointer;
+  transition:opacity 0.2s;
+  border:1px solid #333;
+}
+.thumb.active-thumb{border-color:#888;}
+.thumb:hover{opacity:0.8;}
+
+.upload-hint{
+  position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;color:#444;font-size:9px;letter-spacing:2px;
+  pointer-events:none;
+}
+
+.upload-btn-photo{
+  position:absolute;
+  top:12px;left:12px;
+  background:rgba(0,0,0,0.6);
+  border:1px solid #333;
+  color:#888;
+  font-family:'Space Mono',monospace;
+  font-size:8px;
+  letter-spacing:2px;
+  padding:4px 10px;
+  cursor:pointer;
+}
+.upload-btn-photo:hover{color:#e8e0d0;border-color:#666;}
+
+input[type=file]{display:none;}
+
+.chapter-dots{
+  display:flex;gap:3px;margin-bottom:4px;
+}
+.cdot{width:6px;height:6px;border-radius:50%;background:#222;}
+.cdot.on{background:#e8e0d0;}
+
+</style>
+
+<div class="journal" id="journal">
+
+  <div class="topbar">
+    <span>BALI 2026 · TRAVEL JOURNAL</span>
+    <div class="topbar-center" id="dot-nav-container"></div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <button class="nav-btn" onclick="prevChapter()">← PREV</button>
+      <button class="nav-btn" onclick="nextChapter()">NEXT →</button>
+    </div>
+  </div>
+
+  <div class="spread">
+    <div class="left-page" id="left-page">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="chapter-tag" id="chapter-tag">ROLL 01 · KODAK PORTRA 400 · 37 EXP</div>
+          <div class="chapter-num" id="chapter-num">01</div>
+        </div>
+        <div class="chapter-dots" id="chapter-dots"></div>
+        <div class="destination-label" id="dest-label">A PHOTOGRAPHIC JOURNAL · EAST JAVA · BALI · SG</div>
+        <div class="destination-name" id="dest-name" style="color:#e8e0d0">BALI<br>2026</div>
+        <div class="accent-line" id="accent-line" style="background:#c8432a"></div>
+        <div class="chinese-name" id="chinese-name">巴厘岛 · 二〇二六</div>
+        <div class="subtitle-tag" id="subtitle-tag">a roll exposed across<br><em>two islands —</em></div>
+      </div>
+
+      <div class="meta-list" id="meta-list"></div>
+
+      <div>
+        <div class="poem" id="poem-text" style="border-color:#c8432a"></div>
+        <div class="spot-tag">SPOT · BALI 2026</div>
+      </div>
+    </div>
+
+    <div class="right-page">
+      <div class="photo-area" id="photo-area">
+        <div class="photo-bg" id="photo-bg"></div>
+        <div class="photo-overlay"></div>
+        <div class="upload-hint" id="upload-hint">CLICK TO ADD PHOTO</div>
+        <div class="frame-counter" id="frame-counter">BALI-00-01 · 01/37</div>
+        <div class="exposure-num" id="exposure-num">01</div>
+        <div class="photo-caption" id="photo-caption"></div>
+        <div class="photo-meta-bottom" id="photo-meta-bottom">
+          <span id="meta-coords"></span>
+          <span id="meta-time"></span>
+          <span id="meta-location"></span>
+          <span id="meta-code"></span>
+        </div>
+        <div class="filmstrip-side" id="filmstrip"></div>
+        <button class="upload-btn-photo" onclick="document.getElementById('file-input').click()">+ ADD PHOTO</button>
+        <input type="file" id="file-input" accept="image/*" multiple onchange="handleUpload(this)">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const chapters = [
+  {
+    roll:'ROLL 01 · KODAK PORTRA 400 · 37 EXP',
+    num:'01',
+    label:'A PHOTOGRAPHIC JOURNAL · EAST JAVA · BALI · SG',
+    name:'BALI\n2026',
+    nameSplit:true,
+    accent:'#c8432a',
+    chinese:'巴厘岛 · 二〇二六',
+    sub:'a roll exposed across\ntwo islands —',
+    poem:'',
+    metas:[
+      ['01  04.28','BROMO','JAVA'],
+      ['02  04.07','IJEN','JAVA'],
+      ['03  04.01','ULUWATU','BALI'],
+      ['04  04.50','UBUD','BALI'],
+      ['05  04.03','NUSA PENIDA','PENIDA'],
+      ['06  05.08','SEMINYAK','BALI'],
+      ['07  05.04','SINGAPORE','SG'],
+    ],
+    caption:'',
+    frameCode:'BALI-00-01',
+    coords:'',time:'',location:'BALI · INDONESIA',code:'COVER'
+  },
+  {
+    roll:'ROLL 01 · KODAK PORTRA 400 · 07 OF 37',
+    num:'02',
+    label:'CHAPTER 02 · EAST JAVA',
+    name:'IJEN',
+    nameSplit:false,
+    accent:'#c8d832',
+    chinese:'伊真',
+    sub:'sulfur lake · 2am hike',
+    poem:'"Acid lake the color of jade,\nminers with sixty kilos of\nsulfur on bamboo poles, walking\ndown\nthrough the dark."',
+    metas:[
+      ['01  04.11','出发出发',''],
+      ['02  04.44','山顶火山口',''],
+    ],
+    caption:'sulfur in headlamps',
+    frameCode:'BALI-00-01',
+    coords:'01/09  04:11  -8.056, 114.240',time:'',location:'IJEN 火山口',code:'KODAK PORTRA 400'
+  },
+  {
+    roll:'ROLL 01 · KODAK PORTRA 400 · 12 OF 37',
+    num:'03',
+    label:'CHAPTER 03 · BALI · INDONESIA',
+    name:'ULUWATU',
+    nameSplit:false,
+    accent:'#c8432a',
+    chinese:'乌鲁瓦图',
+    sub:'cliff temple · sunset',
+    poem:'"Ocean wave screams\ninto the cliff face,\nand the cliff face burned."',
+    metas:[
+      ['01  16.41','普拉乌鲁瓦图',''],
+      ['02  18.44','山崖边看日落',''],
+    ],
+    caption:'the edge of the island',
+    frameCode:'BALI-00-03',
+    coords:'01/12  16:41  -8.829, 115.084',time:'',location:'ULUWATU 乌鲁瓦图',code:'KODAK PORTRA 400'
+  },
+  {
+    roll:'ROLL 01 · KODAK PORTRA 400 · 19 OF 37',
+    num:'04',
+    label:'CHAPTER 04 · BALI · INDONESIA',
+    name:'UBUD',
+    nameSplit:false,
+    accent:'#4a9e6a',
+    chinese:'乌布',
+    sub:'rice terraces · monkey forest',
+    poem:'"Green descending in steps,\nthe water finds its own\nslow way to the sea."',
+    metas:[
+      ['01  08.20','德哥拉朗梯田',''],
+      ['02  10.15','猴林道',''],
+    ],
+    caption:'tegalalang at dawn',
+    frameCode:'BALI-00-04',
+    coords:'01/19  08:20  -8.432, 115.279',time:'',location:'UBUD 乌布',code:'KODAK PORTRA 400'
+  },
+];
+
+let current = 0;
+let userPhotos = {};
+
+function buildDots(){
+  const c = document.getElementById('dot-nav-container');
+  c.innerHTML='';
+  chapters.forEach((ch,i)=>{
+    const d=document.createElement('div');
+    d.className='dot-nav'+(i===current?' active':'')+(ch.accent==='#c8d832'?' yellow':'');
+    if(i===current)d.style.background=ch.accent;
+    d.onclick=()=>goTo(i);
+    c.appendChild(d);
+  });
+}
+
+function buildChapterDots(){
+  const c=document.getElementById('chapter-dots');
+  c.innerHTML='';
+  chapters.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='cdot'+(i===current?' on':'');
+    c.appendChild(d);
+  });
+}
+
+function buildMeta(ch){
+  const ml=document.getElementById('meta-list');
+  ml.innerHTML='';
+  ch.metas.forEach(m=>{
+    const row=document.createElement('div');
+    row.className='meta-row';
+    row.innerHTML=`<span>${m[0]}</span><span style="color:${ch.accent};font-size:8px;letter-spacing:1px">${m[1]}</span><span>${m[2]}</span>`;
+    ml.appendChild(row);
+  });
+}
+
+function buildFilmstrip(){
+  const fs=document.getElementById('filmstrip');
+  fs.innerHTML='';
+  const photos=userPhotos[current]||[];
+  const count=Math.max(photos.length,8);
+  for(let i=0;i<count;i++){
+    const t=document.createElement('div');
+    t.className='thumb'+(i===0?' active-thumb':'');
+    if(photos[i]){
+      t.style.backgroundImage=`url(${photos[i].src})`;
+      t.style.backgroundSize='cover';
+    }
+    t.onclick=(()=>{
+      const idx=i;
+      return()=>{
+        document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active-thumb'));
+        t.classList.add('active-thumb');
+        if(photos[idx]){
+          document.getElementById('photo-bg').style.backgroundImage=`url(${photos[idx].src})`;
+          document.getElementById('upload-hint').style.display='none';
+        }
+      };
+    })();
+    fs.appendChild(t);
+  }
+}
+
+function render(){
+  const ch=chapters[current];
+
+  document.getElementById('chapter-tag').textContent=ch.roll;
+  document.getElementById('chapter-num').textContent=ch.num;
+  document.getElementById('dest-label').textContent=ch.label;
+
+  const dn=document.getElementById('dest-name');
+  dn.style.color='#e8e0d0';
+  if(ch.nameSplit){
+    dn.innerHTML=ch.name.replace('\n','<br>');
+    dn.style.fontSize='52px';
+  } else {
+    dn.textContent=ch.name;
+    dn.style.fontSize=ch.name.length>6?'44px':'56px';
+  }
+
+  document.getElementById('accent-line').style.background=ch.accent;
+  document.getElementById('chinese-name').textContent=ch.chinese;
+  document.getElementById('subtitle-tag').innerHTML=ch.sub.replace('\n','<br>');
+
+  const poem=document.getElementById('poem-text');
+  poem.style.borderColor=ch.accent;
+  poem.innerHTML=ch.poem.replace(/\n/g,'<br>');
+
+  document.getElementById('frame-counter').textContent=ch.frameCode+' · BALI 2026';
+  document.getElementById('exposure-num').textContent=ch.num;
+  document.getElementById('photo-caption').textContent=ch.caption;
+
+  document.getElementById('meta-coords').textContent=ch.coords;
+  document.getElementById('meta-location').textContent=ch.location;
+  document.getElementById('meta-code').textContent=ch.code;
+
+  const bg=document.getElementById('photo-bg');
+  const photos=userPhotos[current]||[];
+  if(photos.length>0){
+    bg.style.backgroundImage=`url(${photos[0].src})`;
+    document.getElementById('upload-hint').style.display='none';
+  } else {
+    bg.style.backgroundImage='none';
+    bg.style.background=sceneBg(current);
+    document.getElementById('upload-hint').style.display='block';
+  }
+
+  buildMeta(ch);
+  buildFilmstrip();
+  buildDots();
+  buildChapterDots();
+
+  const lp=document.getElementById('left-page');
+  lp.style.background=current===0?'#0a0a08':chapterBg(current);
+}
+
+function chapterBg(i){
+  return['#0a0a08','#0d1a14','#0d1420','#0d1508','#0d1014'][i]||'#0a0a08';
+}
+
+function sceneBg(i){
+  const bgs=[
+    'linear-gradient(160deg,#1a0d08 0%,#3d1a0a 40%,#6b2a10 70%,#c8432a 100%)',
+    'linear-gradient(160deg,#0d1a18 0%,#0d2a20 40%,#1a4a38 70%,#2a6a50 100%)',
+    'linear-gradient(160deg,#0d1020 0%,#0d1a30 50%,#1a2a50 80%,#4a6a8b 100%)',
+    'linear-gradient(160deg,#0d1808 0%,#1a2d0d 50%,#2a4a18 80%,#4a6a30 100%)',
+  ];
+  return bgs[i]||bgs[0];
+}
+
+function goTo(i){current=i;render();}
+function prevChapter(){if(current>0){current--;render();}}
+function nextChapter(){if(current<chapters.length-1){current++;render();}}
+
+function handleUpload(input){
+  const files=Array.from(input.files);
+  if(!files.length)return;
+  if(!userPhotos[current])userPhotos[current]=[];
+  let loaded=0;
+  files.forEach(file=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      userPhotos[current].push({src:e.target.result,name:file.name});
+      loaded++;
+      if(loaded===files.length)render();
+    };
+    r.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+render();
+</script>

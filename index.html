@@ -421,7 +421,11 @@ const chapters = [
 ];
 
 let current = 0;
-let userPhotos = {};
+let userPhotos = {
+  0: [
+    { src: 'cover.jpg', name: 'cover.jpg' }
+  ]
+};
 
 function buildDots(){
   const c = document.getElementById('dot-nav-container');
